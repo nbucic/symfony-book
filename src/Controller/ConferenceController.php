@@ -10,7 +10,7 @@ use Symfony\Component\Routing\Attribute\Route;
 final class ConferenceController extends AbstractController
 {
     #[Route('/', name: 'homepage')]
-    public function index(Request $request): Response
+    public function index(): Response
     {
         return new Response(<<<EOF
             <html>
