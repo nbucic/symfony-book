@@ -1,9 +1,12 @@
+.idea
+/public/uploads
 
 ###> symfony/framework-bundle ###
 /.env.local
 /.env.local.php
 /.env.*.local
 /config/secrets/prod/prod.decrypt.private.php
+/config/secrets/dev/dev.decrypt.private.php
 /public/bundles/
 /var/
 /vendor/
@@ -18,4 +21,4 @@
 /public/assets/
 /assets/vendor/
 ###< symfony/asset-mapper ###
-.idea
+
