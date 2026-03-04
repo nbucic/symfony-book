@@ -7,16 +7,21 @@ use App\Entity\Comment;
 use App\Entity\Conference;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
+use Faker\Factory;
 use Symfony\Component\PasswordHasher\Hasher\PasswordHasherFactoryInterface;
 
 class AppFixtures extends Fixture
 {
-    public function __construct(private readonly PasswordHasherFactoryInterface $passwordHasherFactory)
+    public function __construct(
+        private readonly PasswordHasherFactoryInterface $passwordHasherFactory,
+    )
     {
     }
 
     public function load(ObjectManager $manager): void
     {
+        $faker = Factory::create();
+
         $amsterdam = (new Conference())
             ->setCity('Amsterdam')
             ->setYear('2019')
@@ -49,6 +54,27 @@ class AppFixtures extends Fixture
             ->setUsername('admin')
             ->setPassword($this->passwordHasherFactory->getPasswordHasher(Admin::class)->hash('admin'));
         $manager->persist($admin);
+
+        for ($i = 0; $i < rand(5, 10); $i++) {
+            $conference = new Conference();
+            $conference->setCity($faker->city());
+            $conference->setYear((string) $faker->numberBetween(2015, 2026));
+            $conference->setIsInternational($faker->boolean());
+            $manager->persist($conference);
+
+            for ($j = 0; $j < rand(1, 20); $j++) {
+                $comment = new Comment();
+                $comment->setConference($conference);
+                $comment->setAuthor($faker->name());
+                $comment->setEmail($faker->email());
+                $comment->setText($faker->text());
+                $comment->setState($faker->randomElement(['published', 'ham', 'potential_spam', 'spam', 'rejected']));
+                if ($faker->boolean(70)) {
+                    $comment->setState('published');
+                }
+                $manager->persist($comment);
+            }
+        }
 
         $manager->flush();
     }

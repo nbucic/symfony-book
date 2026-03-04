@@ -3,7 +3,10 @@ services:
 ###> doctrine/doctrine-bundle ###
   database:
     ports:
-      - "5432"
+      - target: 5432
+        published: 5432
+        protocol: tcp
+        mode: host
 ###< doctrine/doctrine-bundle ###
 
 ###> symfony/mailer ###
